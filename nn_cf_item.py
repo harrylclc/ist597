@@ -3,6 +3,8 @@ from scipy.sparse import csc_matrix
 import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
+from util import getArgMap
+import sys
 data_folder = "/home/cul226/data/ml-100k/"
 # data_folder = "/home/lc/data/ml-100k/"
 
@@ -156,13 +158,14 @@ def load_matrix(k):
     print 'loading done'
     return sim_mat
 
-
 # parameters
-N = 10  # N-nearest neighbors
-DIST_FUNC = 0  # 0: cos 1: pearson
-AGGREGATION_METHOD = 0  # score aggregation method
-PRECALCULATION = 1
-USE_COMPUTED_MATRIX = 0
+argMap = getArgMap(sys.argv[1:])
+N = int(argMap.get('-n', 10))  # N-nearest neighbors
+DIST_FUNC = int(argMap.get('-d', 0))  # 0: cos 1: pearson
+AGGREGATION_METHOD = int(argMap.get('-a', 0))  # score aggregation method
+PRECALCULATION = int(argMap.get('-p', 0))
+USE_COMPUTED_MATRIX = int(argMap.get('-m', 0))
+SAVE_RESULTS = int(argMap.get('-save', 0))
 
 if __name__ == "__main__":
     mae_set = []
@@ -209,8 +212,9 @@ if __name__ == "__main__":
         print "avg:"
         print "MAE: {}".format(np.mean(mae_set))
         print "RMSE: {}".format(np.mean(rmse_set))
-        with open('../result/cf_item_{}_{}_{}'.format(N, DIST_FUNC, AGGREGATION_METHOD), 'w') as f:
-            f.write('MAE: {}\n'.format(np.mean(mae_set)))
-            f.write(str(mae_set) + '\n')
-            f.write('RMSE: {}\n'.format(np.mean(rmse_set)))
-            f.write(str(rmse_set) + '\n')
+        if SAVE_RESULTS:
+            with open('../result/cf_item_{}_{}_{}'.format(N, DIST_FUNC, AGGREGATION_METHOD), 'w') as f:
+                f.write('MAE: {}\n'.format(np.mean(mae_set)))
+                f.write(str(mae_set) + '\n')
+                f.write('RMSE: {}\n'.format(np.mean(rmse_set)))
+                f.write(str(rmse_set) + '\n')

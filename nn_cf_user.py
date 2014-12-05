@@ -4,6 +4,8 @@ from scipy.sparse import csr_matrix
 import numpy as np
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
+from util import getArgMap
+import sys
 data_folder = "/home/cul226/data/ml-100k/"
 # data_folder = "/home/lc/data/ml-100k/"
 
@@ -152,18 +154,20 @@ def load_matrix(k):
             # break
     print 'loading done'
     return sim_mat
-# parameters
-N = 10
-DIST_FUNC = 0  # 0: cos 1: pearson
-AGGREGATION_METHOD = 0  # score aggregation method
-PRECALCULATION = 1
-USE_COMPUTED_MATRIX = 0
 
+# parameters
+argMap = getArgMap(sys.argv[1:])
+N = int(argMap.get('-n', 10))  # N-nearest neighbors
+DIST_FUNC = int(argMap.get('-d', 0))  # 0: cos 1: pearson
+AGGREGATION_METHOD = int(argMap.get('-a', 0))  # score aggregation method
+PRECALCULATION = int(argMap.get('-p', 0))
+USE_COMPUTED_MATRIX = int(argMap.get('-m', 0))
+SAVE_RESULTS = int(argMap.get('-save', 0))
 
 if __name__ == "__main__":
     mae_set = []
     rmse_set = []
-    for i in xrange(1, 5):
+    for i in xrange(5):
         m, col2rows, rows, cols = construct_ui_matrix(
             data_folder + "u{}.base".format(i + 1))
         # pre-computation
