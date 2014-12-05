@@ -64,7 +64,7 @@ def get_sim(u, v):
     if DIST_FUNC == 0:
         return cosine_sim(u, v)
     elif DIST_FUNC == 1:
-        return pearson_corr(i, j)
+        return pearson_corr(u, v)
 
 
 def aggregation_func(nns, u, k, method=0):

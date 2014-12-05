@@ -56,6 +56,7 @@ def pearson_corr(i, j):
     if si == 0 or sj == 0:
         return 0
     corr = sij / (sqrt(si*sj))
+    # print corr
     return corr
 
 
@@ -164,6 +165,7 @@ N = int(argMap.get('-n', 10))  # N-nearest neighbors
 DIST_FUNC = int(argMap.get('-d', 0))  # 0: cos 1: pearson
 AGGREGATION_METHOD = int(argMap.get('-a', 0))  # score aggregation method
 PRECALCULATION = int(argMap.get('-p', 0))
+CV_ID = int(argMap.get('-id', 0))
 USE_COMPUTED_MATRIX = int(argMap.get('-m', 0))
 SAVE_RESULTS = int(argMap.get('-save', 0))
 
@@ -171,6 +173,9 @@ if __name__ == "__main__":
     mae_set = []
     rmse_set = []
     for i in xrange(5):
+        if PRECALCULATION:
+            if i != CV_ID:
+                continue
         m, row2cols, rows, cols = construct_ui_matrix(
             data_folder + "u{}.base".format(i + 1))
         # pre-computation
