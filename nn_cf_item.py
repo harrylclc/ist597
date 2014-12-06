@@ -5,8 +5,8 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
 from util import getArgMap
 import sys
-# data_folder = "/home/cul226/data/ml-100k/"
-data_folder = "/home/lc/data/ml-100k/"
+data_folder = "/home/cul226/data/ml-100k/"
+# data_folder = "/home/lc/data/ml-100k/"
 
 
 def construct_ui_matrix(input):
@@ -29,12 +29,18 @@ def construct_ui_matrix(input):
 
 
 def cosine_sim(i, j):
-    dot_prod = m[:, i].T.dot(m[:, j]).data
-    dot_prod = 0 if len(dot_prod) == 0 else dot_prod[0]
-    norm_i = np.linalg.norm(m[:, i].data)
+    # find the set of users who rated both item i and j
+    ui = m[:, i].indices
+    uj = m[:, j].indices
+    uij = np.intersect1d(ui, uj)
+    if len(uij) == 0:
+        return 0
+    dot_prod = m[uij, i].T.dot(m[uij, j]).data[0]
+    # dot_prod = 0 if len(dot_prod) == 0 else dot_prod[0]
+    norm_i = np.linalg.norm(m[uij, i].data)
     if norm_i == 0:
         return 0
-    norm_j = np.linalg.norm(m[:, j].data)
+    norm_j = np.linalg.norm(m[uij, j].data)
     if norm_j == 0:
         return 0
     cos = dot_prod / (norm_i * norm_j)

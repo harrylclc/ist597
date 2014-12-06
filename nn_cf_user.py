@@ -29,16 +29,23 @@ def construct_ui_matrix(input):
     return m, col2rows, rows, set(col2rows.keys())
 
 
-def cosine_sim(x, y):
-    dot_prod = m[x, :].dot(m[y, :].T).data
-    dot_prod = 0 if len(dot_prod) == 0 else dot_prod[0]
-    norm_x = np.linalg.norm(m[x, :].data)
+def cosine_sim(u, v):
+    # find the set of items rated by both user u and v
+    iu = m[u, :].indices
+    iv = m[v, :].indices
+    iuv = np.intersect1d(iu, iv)
+    if len(iuv) == 0:
+        return 0
+    dot_prod = m[u, iuv].dot(m[v, iuv].T).data[0]
+    # dot_prod = 0 if len(dot_prod) == 0 else dot_prod[0]
+    norm_x = np.linalg.norm(m[u, iuv].data)
     if norm_x == 0:
         return 0
-    norm_y = np.linalg.norm(m[y, :].data)
+    norm_y = np.linalg.norm(m[v, iuv].data)
     if norm_y == 0:
         return 0
     cos = dot_prod / (norm_x * norm_y)
+    # print cos
     return cos
 
 
