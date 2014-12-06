@@ -5,8 +5,8 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error
 from math import sqrt
 from util import getArgMap
 import sys
-data_folder = "/home/cul226/data/ml-100k/"
-# data_folder = "/home/lc/data/ml-100k/"
+# data_folder = "/home/cul226/data/ml-100k/"
+data_folder = "/home/lc/data/ml-100k/"
 
 
 def construct_ui_matrix(input):
@@ -29,7 +29,7 @@ def construct_ui_matrix(input):
 
 
 def cosine_sim(i, j):
-    dot_prod = m[:, i].dot(m[:, j].T).data
+    dot_prod = m[:, i].T.dot(m[:, j]).data
     dot_prod = 0 if len(dot_prod) == 0 else dot_prod[0]
     norm_i = np.linalg.norm(m[:, i].data)
     if norm_i == 0:
@@ -38,6 +38,7 @@ def cosine_sim(i, j):
     if norm_j == 0:
         return 0
     cos = dot_prod / (norm_i * norm_j)
+    # print cos
     return cos
 
 
