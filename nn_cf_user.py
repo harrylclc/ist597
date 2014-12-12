@@ -197,12 +197,13 @@ if __name__ == "__main__":
                     uk.append((int(s[0]) - 1, int(s[1]) - 1))
                     y.append(int(s[2]))
             y_pred = []
-            # predict(6, 598)
-            for (u, k) in uk:
-                print u, k
+            for cnt, (u, k) in enumerate(uk):
+                # print u, k
                 r_pred = predict(u, k)
-                print r_pred
+                # print r_pred
                 y_pred.append(r_pred)
+                if cnt % 5000 == 0:
+                    print '{}/{}'.format(cnt, len(uk))
             mae = mean_absolute_error(y, y_pred)
             rmse = sqrt(mean_squared_error(y, y_pred))
             print "============{}".format(i)
@@ -215,7 +216,8 @@ if __name__ == "__main__":
         print "avg:"
         print "MAE: {}".format(np.mean(mae_set))
         print "RMSE: {}".format(np.mean(rmse_set))
-        with open('../result/cf_user_{}_{}_{}'.format(N, DIST_FUNC, AGGREGATION_METHOD), 'w') as f:
+        with open('../result/cf_user_{}_{}_{}'.format(N, DIST_FUNC,
+                  AGGREGATION_METHOD), 'w') as f:
                 f.write('MAE: {}\n'.format(np.mean(mae_set)))
                 f.write(str(mae_set) + '\n')
                 f.write('RMSE: {}\n'.format(np.mean(rmse_set)))
